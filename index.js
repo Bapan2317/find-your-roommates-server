@@ -38,6 +38,12 @@ async function run() {
         const result = await roommateCollection.find().toArray()
         res.send(result)
     })
+    app.get("/allRoommates/:id", async(req, res) => {
+      const id = req.params.id;
+        const query = {_id: new ObjectId(id)}
+        const result = await roommateCollection.findOne(query)
+        res.send(result)
+    })
 
     app.get("/roommates/:id", async(req, res) => {
         const id = req.params.id;
@@ -48,10 +54,21 @@ async function run() {
 
     app.post("/roommates", async(req, res) => {
       const newRoommate = req.body;
-      console.log(newRoommate);
       const result = await roommateCollection.insertOne(newRoommate)
       res.send(result)
     })
+
+    app.put("/allRoommates/:id", async(req, res) => {
+        const id = req.params.id;
+        const filter = { _id: new ObjectId(id)}
+        const options = { upsert: true}
+        const updatePost = req.body;
+        const updateDoc = {
+          $set: updatePost
+        }
+        const result = await roommateCollection.updateOne(filter, updateDoc, options)
+        res.send(result)
+    } )
 
     app.delete("/roommates/:id", async(req, res) => {
       const id = req.params.id;
