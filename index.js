@@ -31,76 +31,76 @@ async function run() {
 
 
     // I will show a total of 6 posts in the header section.
-    app.get("/filterRoommates", async(req, res) => {
-        const result = await roommateCollection.find({availability: "available"}).limit(6).toArray()
-        res.send(result)
+    app.get("/filterRoommates", async (req, res) => {
+      const result = await roommateCollection.find({ availability: "available" }).limit(6).toArray()
+      res.send(result)
     })
 
 
     //  Show all posts on the Browse Listing page.
-    app.get("/allRoommates", async(req, res) => {
-        const result = await roommateCollection.find().toArray()
-        res.send(result)
+    app.get("/allRoommates", async (req, res) => {
+      const result = await roommateCollection.find().toArray()
+      res.send(result)
     })
 
 
     // Extract a specific post from all posts
-    app.get("/allRoommates/:id", async(req, res) => {
+    app.get("/allRoommates/:id", async (req, res) => {
       const id = req.params.id;
-        const query = {_id: new ObjectId(id)}
-        const result = await roommateCollection.findOne(query)
-        res.send(result)
+      const query = { _id: new ObjectId(id) }
+      const result = await roommateCollection.findOne(query)
+      res.send(result)
     })
 
 
-// 
-    app.get("/roommates/:id", async(req, res) => {
-        const id = req.params.id;
-        const query = {_id: new ObjectId(id)}
-        const result = await roommateCollection.findOne(query)
-        res.send(result)
+    // 
+    app.get("/roommates/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) }
+      const result = await roommateCollection.findOne(query)
+      res.send(result)
     })
 
-    app.post("/roommates", async(req, res) => {
+    app.post("/roommates", async (req, res) => {
       const newRoommate = req.body;
       const result = await roommateCollection.insertOne(newRoommate)
       res.send(result)
     })
 
 
-    app.put("/allRoommates/:id", async(req, res) => {
-        const id = req.params.id;
-        const filter = { _id: new ObjectId(id)}
-        const options = { upsert: true}
-        const updatePost = req.body;
-        const updateDoc = {
-          $set: updatePost
-        }
-        const result = await roommateCollection.updateOne(filter, updateDoc, options)
-        res.send(result)
-    } )
+    app.put("/allRoommates/:id", async (req, res) => {
+      const id = req.params.id;
+      const filter = { _id: new ObjectId(id) }
+      const options = { upsert: true }
+      const updatePost = req.body;
+      const updateDoc = {
+        $set: updatePost
+      }
+      const result = await roommateCollection.updateOne(filter, updateDoc, options)
+      res.send(result)
+    })
 
 
     app.patch("/roommates/:id/like", async (req, res) => {
-  const id = req.params.id;
-  const filter = { _id: new ObjectId(id) };
-  const updateDoc = {
-    $inc: { likeCount: 1 }
-  };
-  const result = await roommateCollection.updateOne(filter, updateDoc);
-  res.send(result);
-});
-
-    app.delete("/roommates/:id", async(req, res) => {
       const id = req.params.id;
-      const query = { _id: new ObjectId(id)};
+      const filter = { _id: new ObjectId(id) };
+      const updateDoc = {
+        $inc: { likeCount: 1 }
+      };
+      const result = await roommateCollection.updateOne(filter, updateDoc);
+      res.send(result);
+    });
+
+    app.delete("/roommates/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
       const result = await roommateCollection.deleteOne(query);
       res.send(result)
     })
 
 
 
-    
+
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
@@ -113,11 +113,11 @@ run().catch(console.dir);
 
 
 app.get("/", (req, res) => {
-    res.send("Hello world")
+  res.send("Hello world")
 })
 
 
 
-app.listen( port, () => {
-    console.log(`Find roommate server is running on port ${port}`);
+app.listen(port, () => {
+  console.log(`Find roommate server is running on port ${port}`);
 })
