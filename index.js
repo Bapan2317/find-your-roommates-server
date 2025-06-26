@@ -10,7 +10,6 @@ app.use(cors())
 
 
 const uri = `mongodb+srv://${process.env.ROOMMATE_USER}:${process.env.ROOMMATE_PASSWORD}@cluster0.8earouo.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
-
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
 const client = new MongoClient(uri, {
   serverApi: {
@@ -60,6 +59,19 @@ async function run() {
       const result = await roommateCollection.findOne(query)
       res.send(result)
     })
+
+    // Get all posts for a specific user by email
+    app.get("/my-listings/:email", async (req, res) => {
+      try {
+        const email = req.params.email;
+        const query = { userEmail: email };
+        const result = await roommateCollection.find(query).toArray();
+        res.send(result);
+      } catch (error) {
+        console.error("Error fetching listings for user:", error);
+        res.status(500).send({ message: "Failed to fetch user listings" });
+      }
+    });
 
     app.post("/roommates", async (req, res) => {
       const newRoommate = req.body;
